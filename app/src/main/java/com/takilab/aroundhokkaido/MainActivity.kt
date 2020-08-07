@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         private const val PERMISSION_REQUEST_CODE = 1234
     }
 
-    private val appid = ""
+    private val appid = "dj00aiZpPTdRVGNNSEJZMWJONSZzPWNvbnN1bWVyc2VjcmV0Jng9N2Q-"
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
@@ -29,6 +29,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        SingletonActivity.SetActivity(this);
+
+        val cityList = CityList()
+        for (city in cityList.cityList) {
+            Log.d("Check", "${city.city} : ${city.distance}")
+        }
 
         requestPermission()
 
