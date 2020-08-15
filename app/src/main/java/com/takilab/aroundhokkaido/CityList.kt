@@ -9,7 +9,7 @@ class CityList {
     val cityList: ArrayList<City> = ArrayList()
 
     init{
-        val activity: MainActivity = SingletonActivity.GetActivity() as MainActivity
+        val activity: MainActivity = SingletonActivity.GetActivity()
         val assetManager = activity.resources.assets //アセット呼び出し
         val inputStream = assetManager.open("AroundHokkaido.json") //Jsonファイル
         val bufferedReader = BufferedReader(InputStreamReader(inputStream))

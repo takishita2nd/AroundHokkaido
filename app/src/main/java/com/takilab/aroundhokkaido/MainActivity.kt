@@ -14,6 +14,7 @@ import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.*
 import org.json.JSONObject
+import java.io.File
 import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
+    private lateinit var aroundHokkaido: AroundHokkaido
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,10 +34,9 @@ class MainActivity : AppCompatActivity() {
 
         SingletonActivity.SetActivity(this);
 
-        val cityList = CityList()
-        for (city in cityList.cityList) {
-            Log.d("Check", "${city.city} : ${city.distance}")
-        }
+        aroundHokkaido = AroundHokkaido()
+        val distance: Double = aroundHokkaido.getDistance()
+        distanceText.text = "%.3f".format(distance)
 
         requestPermission()
 
@@ -85,9 +86,10 @@ class MainActivity : AppCompatActivity() {
                                     val jsonData = jsonArray.getJSONObject(i)
                                     val geometry = jsonData.getJSONObject("Geometry")
                                     val distance = geometry.getDouble("Distance")
+                                    val totalDistance: Double = aroundHokkaido.updateDistance(distance)
                                     val mainHandler : Handler = Handler(Looper.getMainLooper())
                                     mainHandler.post(Runnable {
-                                        distanceText.text = "$distance"
+                                        distanceText.text = "%.3f".format(totalDistance)
                                     })
                                 }
                             }
