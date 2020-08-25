@@ -23,6 +23,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val appid = "dj00aiZpPTdRVGNNSEJZMWJONSZzPWNvbnN1bWVyc2VjcmV0Jng9N2Q-"
+    private val distanceFormat = "%.3f km ($.3f %)"
+    private val distancefromSapporoFormat = "札幌から %.3f km ($.3f %)"
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
@@ -36,7 +38,8 @@ class MainActivity : AppCompatActivity() {
 
         aroundHokkaido = AroundHokkaido()
         val distance: Double = aroundHokkaido.getDistance()
-        distanceText.text = "%.3f".format(distance)
+        distanceSection.text = distanceFormat.format(distance, 0)
+        distanceFromStart.text = distancefromSapporoFormat.format(0, 0)
 
         requestPermission()
 
@@ -58,10 +61,10 @@ class MainActivity : AppCompatActivity() {
                 for (location in locationResult.locations) {
                     updatedCount++
                     if (prevLocation == null) {
-                        locationText.text = "[${updatedCount}] ${location.latitude} , ${location.longitude}"
+                        //locationText.text = "[${updatedCount}] ${location.latitude} , ${location.longitude}"
                     } else {
-                        locationText.text = "[${updatedCount}] ${location.latitude} , ${location.longitude}" +
-                                " - ${prevLocation!!.latitude} , ${prevLocation!!.longitude}"
+                        //locationText.text = "[${updatedCount}] ${location.latitude} , ${location.longitude}" +
+                        //        " - ${prevLocation!!.latitude} , ${prevLocation!!.longitude}"
                         // HTTPリクエストを作成
                         val request = Request.Builder()
                             .url(url.format(location.longitude, location.latitude, prevLocation!!.longitude, prevLocation!!.latitude, appid))
@@ -89,7 +92,8 @@ class MainActivity : AppCompatActivity() {
                                     val totalDistance: Double = aroundHokkaido.updateDistance(distance)
                                     val mainHandler : Handler = Handler(Looper.getMainLooper())
                                     mainHandler.post(Runnable {
-                                        distanceText.text = "%.3f".format(totalDistance)
+                                        distanceSection.text = distanceFormat.format(totalDistance, 0)
+                                        distanceFromStart.text = distancefromSapporoFormat.format(0, 0)
                                     })
                                 }
                             }
