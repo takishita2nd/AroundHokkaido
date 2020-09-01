@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         aroundHokkaido = AroundHokkaido()
         val distance: Double = aroundHokkaido.getDistance()
+        updateCitydistance(aroundHokkaido.getCity())
         distanceSection.text = distanceFormat.format(distance, 0.0)
         distanceFromStart.text = distancefromSapporoFormat.format(0.0, 0.0)
 
@@ -92,6 +93,7 @@ class MainActivity : AppCompatActivity() {
                                     val totalDistance: Double = aroundHokkaido.updateDistance(distance)
                                     val mainHandler : Handler = Handler(Looper.getMainLooper())
                                     mainHandler.post(Runnable {
+                                        updateCitydistance(aroundHokkaido.getCity())
                                         distanceSection.text = distanceFormat.format(totalDistance, 0.0)
                                         distanceFromStart.text = distancefromSapporoFormat.format(0.0, 0.0)
                                     })
@@ -178,5 +180,10 @@ class MainActivity : AppCompatActivity() {
             fastestInterval = 5000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
+    }
+
+    private fun updateCitydistance(startEnd : StartEnd){
+        startCity.text = startEnd.startCityName
+        endCity.text = startEnd.endCityName
     }
 }

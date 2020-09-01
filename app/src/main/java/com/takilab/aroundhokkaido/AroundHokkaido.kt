@@ -25,4 +25,26 @@ class AroundHokkaido {
         file.writeText("%.3f".format(totalDistance))
         return totalDistance
     }
+
+    fun getCity() : StartEnd {
+        var tempDistance = 0.0
+        var start : String = ""
+        var end : String = ""
+        var loop : Boolean = false
+        run {
+            citylist.cityList.forEach{
+                if(loop){
+                    end = it.city
+                    return@run
+                }else{
+                    tempDistance += it.distance
+                    if(totalDistance < tempDistance){
+                        start = it.city
+                        loop = true
+                    }
+                }
+            }
+        }
+        return StartEnd(start, end)
+    }
 }
