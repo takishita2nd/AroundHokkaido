@@ -7,6 +7,7 @@ import java.io.InputStreamReader
 
 class CityList {
     val cityList: ArrayList<City> = ArrayList()
+    var totalDistance: Double = 0.0
 
     init{
         val activity: MainActivity = SingletonActivity.GetActivity()
@@ -20,6 +21,7 @@ class CityList {
             for (i in 0 until jsonArray.length()) {
                 val jsonData = jsonArray.getJSONObject(i)
                 val city: City = City(jsonData.getString("city"), jsonData.getDouble("distance"))
+                totalDistance += city.distance
                 cityList.add(city)
             }
         } catch (e: JSONException) {

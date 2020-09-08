@@ -37,10 +37,9 @@ class MainActivity : AppCompatActivity() {
         SingletonActivity.SetActivity(this);
 
         aroundHokkaido = AroundHokkaido()
-        val distance: Double = aroundHokkaido.getDistance()
-        updateCitydistance(aroundHokkaido.getCity())
-        distanceSection.text = distanceFormat.format(distance, 0.0)
-        distanceFromStart.text = distancefromSapporoFormat.format(0.0, 0.0)
+        updateCitydistance(aroundHokkaido.getPosition())
+        distanceFromStart.text = distancefromSapporoFormat.format(aroundHokkaido.getResultDistance(),
+            aroundHokkaido.getResultDistance() / aroundHokkaido.getTotalDistance() * 100)
 
         requestPermission()
 
@@ -62,13 +61,11 @@ class MainActivity : AppCompatActivity() {
                 for (location in locationResult.locations) {
                     updatedCount++
                     if (prevLocation == null) {
-                        //locationText.text = "[${updatedCount}] ${location.latitude} , ${location.longitude}"
                     } else {
-                        //locationText.text = "[${updatedCount}] ${location.latitude} , ${location.longitude}" +
-                        //        " - ${prevLocation!!.latitude} , ${prevLocation!!.longitude}"
                         // HTTPリクエストを作成
                         val request = Request.Builder()
-                            .url(url.format(location.longitude, location.latitude, prevLocation!!.longitude, prevLocation!!.latitude, appid))
+                            .url(url.format(location.longitude, location.latitude, prevLocation!!.longitude,
+                                prevLocation!!.latitude, appid))
                             .build()
                         // HTTPリクエストを送信
                         client.newCall(request).enqueue(object : Callback {
@@ -93,9 +90,9 @@ class MainActivity : AppCompatActivity() {
                                     val totalDistance: Double = aroundHokkaido.updateDistance(distance)
                                     val mainHandler : Handler = Handler(Looper.getMainLooper())
                                     mainHandler.post(Runnable {
-                                        updateCitydistance(aroundHokkaido.getCity())
-                                        distanceSection.text = distanceFormat.format(totalDistance, 0.0)
-                                        distanceFromStart.text = distancefromSapporoFormat.format(0.0, 0.0)
+                                        updateCitydistance(aroundHokkaido.getPosition())
+                                        distanceFromStart.text = distancefromSapporoFormat.format(aroundHokkaido.getResultDistance(),
+                                            aroundHokkaido.getResultDistance() / aroundHokkaido.getTotalDistance() * 100)
                                     })
                                 }
                             }
@@ -182,8 +179,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateCitydistance(startEnd : StartEnd){
+    private fun updateCitydistance(startEnd : StartEndPosition){
         startCity.text = startEnd.startCityName
         endCity.text = startEnd.endCityName
+        distanceSection.text = distanceFormat.format(startEnd.positionDistance,
+            startEnd.positionDistance / startEnd.segmentDistance * 100)
     }
 }
